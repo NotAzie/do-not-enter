@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DO NOT ENTER</title>
+    <style>
+        /* Base Styles */
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-darker: #000000;
+            --text-main: #e0e0e0;
+            --text-accent: #c1121f;
+            --text-faded: #8a8a8a;
+            --border: #2a2a2a;
+            --glow: rgba(193, 18, 31, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M16,2 C8,2 2,8 2,16 C2,24 8,30 16,30 C24,30 30,24 30,16 C30,8 24,2 16,2 Z" fill="%23c1121f" opacity="0.8"/><path d="M16,8 C20,8 24,12 24,16 C24,20 20,24 16,24 C12,24 8,20 8,16 C8,12 12,8 16,8 Z" fill="%23a00" opacity="0.8"/></svg>'), auto;
+        }
+
+        /* Blood drip effect */
+        .blood-drip {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M20,0 Q30,15 20,30 Q10,45 20,60 Q30,75 20,90 L25,100 L30,90 Q20,75 30,60 Q40,45 30,30 Q20,15 30,0 Z" fill="%23c1121f" opacity="0.1"/></svg>');
+            pointer-events: none;
+            z-index: 1000;
+            mix-blend-mode: multiply;
+        }
+
+        /* Flickering effect */
+        @keyframes flicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 72%, 100% { opacity: 1; }
+            20%, 21.999%, 63%, 63.999%, 65%, 71.999% { opacity: 0.3; }
+        }
+
+        .flicker { animation: flicker 3s infinite alternate; }
+
+        /* Glitch effect */
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em 0.05em 0 rgba(0, 0, 255, 0.75); }
+            14% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em 0.05em 0 rgba(0, 0, 255, 0.75); }
+            15% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75), -0.05em -0.05em 0 rgba(0, 0, 255, 0.75); }
+            49% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75), -0.05em -0.05em 0 rgba(0, 0, 255, 0.75); }
+            50% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75); }
+            99% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75); }
+            100% { text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em -0.05em 0 rgba(0, 0, 255, 0.75); }
+        }
+
+        .glitch { animation: glitch 650ms infinite; }
+
+        /* Static TV effect */
+        .static-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="black"/><rect x="10" y="10" width="1" height="1" fill="white"/><rect x="30" y="20" width="1" height="1" fill="white"/><rect x="50" y="30" width="1" height="1" fill="white"/><rect x="70" y="40" width="1" height="1" fill="white"/><rect x="90" y="50" width="1" height="1" fill="white"/><rect x="20" y="60" width="1" height="1" fill="white"/><rect x="40" y="70" width="1" height="1" fill="white"/><rect x="60" y="80" width="1" height="1" fill="white"/><rect x="80" y="90" width="1" height="1" fill="white"/></svg>');
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.1;
+            mix-blend-mode: screen;
+        }
+
+        /* Shadow figures */
+        .shadow-figure {
+            position: fixed;
+            width: 150px;
+            height: 300px;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.9));
+            z-index: 998;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+        /* Peripheral vision faces */
+        .peripheral-face {
+            position: fixed;
+            width: 150px;
+            height: 150px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%23222"/><circle cx="35" cy="40" r="5" fill="white"/><circle cx="65" cy="40" r="5" fill="white"/><path d="M30,70 Q50,85 70,70" stroke="white" stroke-width="3" fill="none"/></svg>');
+            background-size: contain;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            pointer-events: none;
+            z-index: 9999;
+            transform: scale(1.5) rotate(10deg);
+        }
+        
+        /* Screen melt effect */
+        .screen-melt {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 0%, rgba(193, 18, 31, 0.3) 100%);
+            clip-path: polygon(0% 0%, 100% 0%, 100% 80%, 50% 100%, 0% 80%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 999;
+            transition: opacity 1s ease;
+        }
+
+        /* EVP audio visualization */
+        .evp-meter {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            width: 200px;
+            height: 20px;
+            background-color: rgba(0,0,0,0.7);
+            border: 1px solid var(--text-accent);
+            display: none;
+            z-index: 1000;
+        }
+        
+        .evp-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--text-accent);
+            transition: width 0.1s ease;
+        }
+
+        /* Bloody cursor */
+        .blood-cursor {
+            position: fixed;
+            width: 32px;
+            height: 32px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M16,2 C8,2 2,8 2,16 C2,24 8,30 16,30 C24,30 30,24 30,16 C30,8 24,2 16,2 Z" fill="%23c1121f" opacity="0.8"/><path d="M16,8 C20,8 24,12 24,16 C24,20 20,24 16,24 C12,24 8,20 8,16 C8,12 12,8 16,8 Z" fill="%23a00" opacity="0.8"/></svg>');
+            pointer-events: none;
+            z-index: 10000;
+            display: none;
+        }
+
+        /* Layout */
+        header {
+            background-color: var(--bg-darker);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.2rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, var(--text-accent) 0%, transparent 70%);
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background-color: var(--text-main);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--text-accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .scare-toggle {
+            background-color: var(--bg-darker);
+            color: var(--text-main);
+            border: 1px solid var(--text-accent);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .scare-toggle:hover {
+            background-color: var(--text-accent);
+            color: var(--bg-dark);
+        }
+
+        main {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero {
+            position: relative;
+            height: 60vh;
+            background: linear-gradient(rgba(10, 10, 10, 0.7), rgba(5, 5, 5, 0.9)), 
+                        url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 3rem;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 0%, var(--bg-dark) 100%);
+            opacity: 0.7;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            text-shadow: 0 0 10px var(--glow);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--text-faded);
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--text-accent);
+            color: var(--bg-dark);
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 0.3rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: var(--text-main);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--glow);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--text-accent);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--text-accent);
+            color: var(--bg-dark);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text-accent);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 3px;
+            background-color: var(--text-accent);
+        }
+
+        /* Scare elements */
+        .scare-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .scare-content {
+            position: relative;
+            max-width: 80%;
+            max-height: 80%;
+        }
+
+        .scare-content img {
+            max-width: 100%;
+            max-height: 80vh;
+            border: 3px solid var(--text-accent);
+            box-shadow: 0 0 30px var(--glow);
+        }
+
+        .close-scare {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            background-color: var(--text-accent);
+            color: var(--bg-dark);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+
+        .alone-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--text-accent);
+            color: var(--bg-dark);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 0 10px var(--glow);
+        }
+
+        .whisper {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: var(--text-faded);
+            font-style: italic;
+            opacity: 0;
+            transition: opacity 2s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .hidden-message {
+            position: absolute;
+            color: var(--text-accent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+            text-shadow: 0 0 5px black;
+            font-size: 1.2rem;
+        }
+
+        .blood-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M20,0 Q30,15 20,30 Q10,45 20,60 Q30,75 20,90 L25,100 L30,90 Q20,75 30,60 Q40,45 30,30 Q20,15 30,0 Z" fill="%23c1121f" opacity="0.5"/></svg>');
+            pointer-events: none;
+            z-index: 1001;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        /* Fake notification */
+        .fake-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #222;
+            border-left: 4px solid var(--text-accent);
+            padding: 1rem;
+            max-width: 300px;
+            z-index: 1000;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+        }
+
+        .fake-notification.show {
+            transform: translateX(0);
+        }
+
+        .fake-notification h4 {
+            color: var(--text-accent);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Face in the crowd */
+        .hidden-face {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%23222"/><circle cx="35" cy="40" r="5" fill="white"/><circle cx="65" cy="40" r="5" fill="white"/><path d="M30,70 Q50,80 70,70" stroke="white" stroke-width="3" fill="none"/></svg>');
+            background-size: contain;
+            opacity: 0;
+            z-index: -1;
+        }
+
+        /* Don't click button */
+        .dont-click {
+            position: fixed;
+            bottom: 60px;
+            right: 20px;
+            background-color: transparent;
+            color: red;
+            border: 1px solid red;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 1000;
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Paranoia mode text replacement */
+        .paranoia-text {
+            transition: all 0.3s ease;
+        }
+
+        /* Cursor animation */
+        @keyframes cursor-blink {
+            0% { opacity: 0 }
+            50% { opacity: 1 }
+            100% { opacity: 0 }
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1em;
+            background-color: var(--text-accent);
+            animation: cursor-blink 1s infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+    </style>
+</head>
+<body class="flicker">
+    <!-- Blood drip effect container -->
+    <div class="blood-drip"></div>
+    <div class="static-overlay"></div>
+    <div class="blood-effect" id="bloodEffect"></div>
+    <div class="screen-melt" id="screenMelt"></div>
+
+    <!-- Shadow figures -->
+    <div class="shadow-figure" style="top: 10%; left: -100px;" id="shadow1"></div>
+    <div class="shadow-figure" style="top: 30%; right: -100px;" id="shadow2"></div>
+
+    <!-- Peripheral faces -->
+    <div class="peripheral-face" id="peripheralFace1"></div>
+    <div class="peripheral-face" id="peripheralFace2"></div>
+
+    <!-- EVP meter -->
+    <div class="evp-meter" id="evpMeter"><div class="evp-bar" id="evpBar"></div></div>
+
+    <!-- Bloody cursor -->
+    <div class="blood-cursor" id="bloodCursor"></div>
+
+    <!-- Scare container (hidden by default) -->
+    <div class="scare-container" id="scareContainer">
+        <div class="scare-content">
+            <img src="https://i.imgur.com/7Z7Z7Z7.jpg" alt="Scary image" id="scareImage">
+            <button class="close-scare" id="closeScare">X</button>
+        </div>
+    </div>
+
+    <!-- Whisper text -->
+    <div class="whisper" id="whisperText"></div>
+
+    <!-- Hidden messages -->
+    <div class="hidden-message" id="hiddenMessage1" style="top: 30%; left: 10%;">They're watching you</div>
+    <div class="hidden-message" id="hiddenMessage2" style="top: 70%; right: 10%;">Don't turn around</div>
+    <div class="hidden-message" id="hiddenMessage3" style="bottom: 20%; left: 50%; transform: translateX(-50%);">It's behind you</div>
+
+    <!-- "Are you alone?" button -->
+    <button class="alone-btn" id="aloneBtn">Are you alone?</button>
+
+    <!-- Don't click button -->
+    <button class="dont-click" id="dontClickBtn">DON'T CLICK</button>
+
+    <!-- Fake notification -->
+    <div class="fake-notification" id="fakeNotification">
+        <h4>Security Alert</h4>
+        <p>Unauthorized access detected. System compromised.</p>
+    </div>
+
+    <header>
+        <nav>
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <div class="logo-text glitch">DO NOT ENTER</div>
+            </div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#archives">Archives</a>
+                <a href="#entities">Entities</a>
+                <a href="#experiments">Experiments</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <button class="scare-toggle" id="scareToggle">ENABLE NIGHTMARE MODE</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>YOU SHOULDN'T BE HERE</h1>
+                <p>This website contains classified information about entities that should not exist. Proceed at your own risk.</p>
+                <div>
+                    <a href="#archives" class="btn">ENTER THE ARCHIVES</a>
+                    <a href="#entities" class="btn btn-secondary">VIEW ENTITIES</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <h3>CLASSIFIED FILES</h3>
+                <p>Access restricted documents about anomalous entities and phenomena. Security clearance required.</p>
+                <a href="#archives" class="btn btn-secondary">REQUEST ACCESS</a>
+            </div>
+            <div class="feature-card">
+                <h3>ENTITY DATABASE</h3>
+                <p>Detailed profiles on known hostile entities. Warning: Some entries may cause psychological distress.</p>
+                <a href="#entities" class="btn btn-secondary">VIEW ENTITIES</a>
+            </div>
+            <div class="feature-card">
+                <h3>EXPERIMENT LOGS</h3>
+                <p>Records of containment procedures and research. Many logs are incomplete or corrupted.</p>
+                <a href="#experiments" class="btn btn-secondary">READ LOGS</a>
+            </div>
+        </section>
+
+        <section id="archives" class="scp-section">
+            <h2 class="section-title">CLASSIFIED ARCHIVES</h2>
+            
+            <div class="document">
+                <div class="document-header">
+                    <div class="document-title">ENTITY-001 - THE HUSK</div>
+                    <div class="document-subtitle">Containment Class: <span class="keter">KETER</span></div>
+                </div>
+                <div class="document-section">
+                    <h3>CONTAINMENT PROCEDURES</h3>
+                    <p>ENTITY-001 is to be kept in a 5m x 5m x 5m containment chamber lined with 30cm thick lead plating. No fewer than three armed guards must maintain visual contact with ENTITY-001 at all times. Under no circumstances should personnel enter the containment chamber.</p>
+                </div>
+                <div class="document-section">
+                    <h3>DESCRIPTION</h3>
+                    <p>ENTITY-001 appears as a humanoid figure approximately 2.1 meters in height. The entity lacks skin, exposing muscle tissue that appears to be in a constant state of regeneration and decay. ENTITY-001's most notable feature is its face - or lack thereof. Where facial features should be, there is only smooth, featureless flesh.</p>
+                    <p>When observed directly, ENTITY-001 remains motionless. However, surveillance footage shows the entity moves when not under direct observation. In these recordings, ENTITY-001 can be seen approaching the observation window, often placing its hands against the glass.</p>
+                </div>
+                <div class="document-section">
+                    <h3>ADDENDUM 001-1</h3>
+                    <p>On ██/██/████, surveillance footage captured ENTITY-001 speaking for the first time. The entity repeated the phrase "Let me out" 47 times before returning to its default position. Audio analysis confirmed the voice matches that of Dr. ██████, who went missing during Incident 001-3.</p>
+                </div>
+                <div class="document-footer">
+                    <p>File last updated: ██/██/████</p>
+                </div>
+            </div>
+
+            <div class="document">
+                <div class="document-header">
+                    <div class="document-title">ENTITY-002 - THE SMILING MAN</div>
+                    <div class="document-subtitle">Containment Class: <span class="euclid">EUCLID</span></div>
+                </div>
+                <div class="document-section">
+                    <h3>CONTAINMENT PROCEDURES</h3>
+                    <p>ENTITY-002 is to be contained within a standard humanoid containment cell. The cell must be illuminated at all times with no fewer than three independent light sources. Personnel entering the containment area must be equipped with night vision goggles in case of power failure.</p>
+                </div>
+                <div class="document-section">
+                    <h3>DESCRIPTION</h3>
+                    <p>ENTITY-002 presents as a Caucasian male of approximately 35 years of age. The entity's most distinctive feature is its facial expression - an impossibly wide smile exposing all teeth. Despite extensive dental examination, ENTITY-002's teeth show no signs of modification to achieve this effect.</p>
+                    <p>ENTITY-002 does not speak, but communicates through written notes. These notes typically contain disturbing messages about the recipient's personal life, including information the entity should have no way of knowing.</p>
+                </div>
+                <div class="document-section">
+                    <h3>ADDENDUM 002-1</h3>
+                    <p>During Experiment 002-7, ENTITY-002 was placed in a room with D-8472. After 17 minutes of silence, ENTITY-002 handed D-8472 a note reading "I know what you did to your sister." D-8472 became hysterical and had to be sedated. Background checks later revealed D-8472's sister had died under suspicious circumstances.</p>
+                </div>
+                <div class="document-footer">
+                    <p>File last updated: ██/██/████</p>
+                </div>
+            </div>
+
+            <div class="document">
+                <div class="document-header">
+                    <div class="document-title">ENTITY-003 - THE STATIC</div>
+                    <div class="document-subtitle">Containment Class: <span class="euclid">EUCLID</span></div>
+                </div>
+                <div class="document-section">
+                    <h3>CONTAINMENT PROCEDURES</h3>
+                    <p>ENTITY-003 is contained within a Faraday cage measuring 3m x 3m x 3m. No electronic devices are permitted within 10 meters of the containment area. Personnel assigned to ENTITY-003 must undergo weekly psychological evaluation.</p>
+                </div>
+                <div class="document-section">
+                    <h3>DESCRIPTION</h3>
+                    <p>ENTITY-003 is an anomalous phenomenon that manifests as television static. The entity can appear on any electronic display device within a 50 meter radius of its containment chamber. When ENTITY-003 manifests, viewers report seeing humanoid shapes moving within the static.</p>
+                    <p>Prolonged exposure to ENTITY-003 (more than 30 seconds) causes severe psychological effects including paranoia, auditory hallucinations, and in some cases, complete mental breakdown. Subjects often report hearing whispers coming from devices displaying ENTITY-003.</p>
+                </div>
+                <div class="document-section">
+                    <h3>ADDENDUM 003-1</h3>
+                    <p>During Incident 003-4, ENTITY-003 manifested simultaneously on all monitors in Sector-7. Security footage shows personnel reacting to something within the static that wasn't visible on camera. Of the 23 personnel present, 17 committed suicide within 72 hours. The remaining 6 were found in a catatonic state, repeatedly whispering "It's in the static."</p>
+                </div>
+                <div class="document-footer">
+                    <p>File last updated: ██/██/████</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="entities" class="scp-section">
+            <h2 class="section-title">KNOWN ENTITIES</h2>
+            
+            <div class="scp-item">
+                <h3>THE FACELESS</h3>
+                <p>Entities that appear human but lack facial features. They mimic human behavior but always seem to be watching you, despite having no eyes.</p>
+                <p><a href="#" class="btn btn-secondary" id="readEntity1">VIEW DETAILS</a></p>
+            </div>
+
+            <div class="scp-item">
+                <h3>THE WHISPERERS</h3>
+                <p>Invisible entities that communicate through electronic devices and dreams. Prolonged exposure leads to irreversible psychological damage.</p>
+                <p><a href="#" class="btn btn-secondary">VIEW DETAILS</a></p>
+            </div>
+
+            <div class="scp-item">
+                <h3>THE SHADOW PEOPLE</h3>
+                <p>Dark humanoid figures that exist just outside your field of vision. They're most active between 2:33 AM and 3:33 AM.</p>
+                <p><a href="#" class="btn btn-secondary">VIEW DETAILS</a></p>
+            </div>
+        </section>
+
+        <section id="experiments" class="scp-section">
+            <h2 class="section-title">EXPERIMENT LOGS</h2>
+            
+            <div class="scp-item">
+                <h3>EXPERIMENT 001-7</h3>
+                <p>Attempted communication with ENTITY-001 using D-Class personnel. Results: ████████████████████████████████████</p>
+                <p><a href="#" class="btn btn-secondary">VIEW LOG</a></p>
+            </div>
+
+            <div class="scp-item">
+                <h3>EXPERIMENT 002-3</h3>
+                <p>Exposure of ENTITY-002 to various light frequencies. Results: Entity became increasingly agitated under red light.</p>
+                <p><a href="#" class="btn btn-secondary">VIEW LOG</a></p>
+            </div>
+
+            <div class="scp-item">
+                <h3>EXPERIMENT 003-9</h3>
+                <p>Attempt to capture ENTITY-003 manifestation on film. Results: Camera operator ███████ after viewing footage.</p>
+                <p><a href="#" class="btn btn-secondary">VIEW LOG</a></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Report</a>
+        </div>
+        <p>© 2023 CLASSIFIED ARCHIVES. ALL RIGHTS RESERVED.</p>
+        <p id="footerMessage">YOU ARE NOT ALONE.</p>
+    </footer>
+
+    <script>
+        // Ultimate Horror Engine 2.0
+        class HorrorEngine {
+            constructor() {
+                this.horrorLevel = 0;
+                this.userSensitivity = 0.8;
+                this.lastScareTime = 0;
+                this.scareCooldown = 20000;
+                this.paranoiaMode = false;
+                this.audioEnabled = false;
+                this.scareCount = 0;
+                this.userName = this.getUserName();
+                this.nightMode = this.isNightTime();
+                this.visitedBefore = localStorage.getItem('visitedBefore') || false;
+                
+                // Initialize all systems
+                this.initElements();
+                this.initAmbientAudio();
+                this.initVisualDistortions();
+                this.initInteractionTraps();
+                this.initBiometricReaction();
+                this.initParanoiaMode();
+                this.initEasterEggs();
+                this.initPersonalizedHorror();
+                
+                // Mark as visited
+                localStorage.setItem('visitedBefore', 'true');
+            }
+
+            getUserName() {
+                // Try to get name from localStorage or prompt
+                let name = localStorage.getItem('userName');
+                if (!name && this.horrorLevel > 0.5 && Math.random() > 0.7) {
+                    name = prompt("What is your name? (Optional)");
+                    if (name) localStorage.setItem('userName', name);
+                }
+                return name;
+            }
+
+            isNightTime() {
+                const hours = new Date().getHours();
+                return hours > 22 || hours < 6;
+            }
+
+            initElements() {
+                // DOM elements
+                this.scareToggle = document.getElementById('scareToggle');
+                this.aloneBtn = document.getElementById('aloneBtn');
+                this.dontClickBtn = document.getElementById('dontClickBtn');
+                this.scareContainer = document.getElementById('scareContainer');
+                this.scareImage = document.getElementById('scareImage');
+                this.closeScare = document.getElementById('closeScare');
+                this.whisperText = document.getElementById('whisperText');
+                this.bloodEffect = document.getElementById('bloodEffect');
+                this.screenMelt = document.getElementById('screenMelt');
+                this.hiddenMessages = [
+                    document.getElementById('hiddenMessage1'),
+                    document.getElementById('hiddenMessage2'),
+                    document.getElementById('hiddenMessage3')
+                ];
+                this.readEntity1 = document.getElementById('readEntity1');
+                this.footerMessage = document.getElementById('footerMessage');
+                this.fakeNotification = document.getElementById('fakeNotification');
+                this.shadow1 = document.getElementById('shadow1');
+                this.shadow2 = document.getElementById('shadow2');
+                this.peripheralFace1 = document.getElementById('peripheralFace1');
+                this.peripheralFace2 = document.getElementById('peripheralFace2');
+                this.staticOverlay = document.querySelector('.static-overlay');
+                this.evpMeter = document.getElementById('evpMeter');
+                this.evpBar = document.getElementById('evpBar');
+                this.bloodCursor = document.getElementById('bloodCursor');
+
+                // Event listeners
+                this.scareToggle.addEventListener('click', () => this.toggleTerrorMode());
+                this.aloneBtn.addEventListener('click', () => this.triggerScare());
+                this.dontClickBtn.addEventListener('click', () => this.handleDontClick());
+                this.closeScare.addEventListener('click', () => this.hideScare());
+                this.readEntity1.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.specialEntityScare();
+                });
+
+                // Mouse tracking for peripheral faces
+                document.addEventListener('mousemove', this.trackPeripheralFaces);
+            }
+
+            initAmbientAudio() {
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    this.backgroundNoise = this.createBackgroundNoise();
+                    this.audioEnabled = true;
+                    
+                    // Whisper system
+                    this.whispers = [
+                        "can you hear me?",
+                        "behind you",
+                        "don't turn around",
+                        "it's coming",
+                        "you're not alone",
+                        "they're watching",
+                        "it's in your house",
+                        "check the door",
+                        "why did you look?",
+                        "it's too late now",
+                        `${this.userName || 'Unknown'}, they know`
+                    ];
+                    
+                    setInterval(() => {
+                        if(this.horrorLevel > 0.3 && Math.random() < this.horrorLevel) {
+                            this.playWhisper();
+                        }
+                    }, 15000);
+                } catch (e) {
+                    console.error("Audio initialization failed:", e);
+                    this.audioEnabled = false;
+                }
+            }
+
+            createBackgroundNoise() {
+                const noiseNode = this.audioContext.createBufferSource();
+                const bufferSize = 2 * this.audioContext.sampleRate;
+                const noiseBuffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
+                const output = noiseBuffer.getChannelData(0);
+                
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+                
+                noiseNode.buffer = noiseBuffer;
+                noiseNode.loop = true;
+                
+                const filter = this.audioContext.createBiquadFilter();
+                filter.type = "bandpass";
+                filter.frequency.value = 500;
+                filter.Q.value = 0.5;
+                
+                noiseNode.connect(filter);
+                filter.connect(this.audioContext.destination);
+                
+                noiseNode.start();
+                return noiseNode;
+            }
+
+            playWhisper() {
+                if (!this.audioEnabled) return;
+                
+                const whisper = this.whispers[Math.floor(Math.random() * this.whispers.length)];
+                const utterance = new SpeechSynthesisUtterance(whisper);
+                utterance.volume = 0.1 + (this.horrorLevel * 0.3);
+                utterance.rate = 0.8;
+                utterance.pitch = 1.2;
+                
+                // Show EVP meter
+                this.evpMeter.style.display = 'block';
+                const evpInterval = setInterval(() => {
+                    this.evpBar.style.width = `${Math.random() * 100}%`;
+                }, 100);
+                
+                // Position the whisper randomly
+                utterance.onboundary = (event) => {
+                    if (event.name === 'word') {
+                        const pan = Math.random() * 2 - 1; // -1 to 1
+                        const source = this.audioContext.createStereoPanner();
+                        source.pan.value = pan;
+                        // Reconnect audio nodes with new panning
+                    }
+                };
+                
+                window.speechSynthesis.speak(utterance);
+                
+                setTimeout(() => {
+                    clearInterval(evpInterval);
+                    this.evpMeter.style.display = 'none';
+                }, 3000);
+            }
+
+            trackPeripheralFaces = (e) => {
+                if(this.horrorLevel > 0.6 && Math.random() < 0.1) {
+                    const face = Math.random() > 0.5 ? this.peripheralFace1 : this.peripheralFace2;
+                    
+                    // Position face opposite to cursor
+                    const offsetX = e.clientX > window.innerWidth/2 ? -200 : 200;
+                    const offsetY = e.clientY > window.innerHeight/2 ? -150 : 150;
+                    
+                    face.style.left = `${e.clientX + offsetX}px`;
+                    face.style.top = `${e.clientY + offsetY}px`;
+                    face.style.opacity = '0.8';
+                    
+                    // Make face disappear when looked at directly
+                    setTimeout(() => {
+                        face.style.opacity = '0';
+                        face.style.transform = 'scale(1.5) rotate(10deg)';
+                    }, 1000);
+                }
+            }
+
+            initVisualDistortions() {
+                // Random static effects
+                setInterval(() => {
+                    if (this.horrorLevel > 0.5 && Math.random() < 0.3) {
+                        this.staticOverlay.style.opacity = '0.3';
+                        setTimeout(() => {
+                            this.staticOverlay.style.opacity = '0.1';
+                        }, 300);
+                    }
+                }, 10000);
+
+                // Shadow figures
+                setInterval(() => {
+                    if (this.horrorLevel > 0.4 && Math.random() < 0.2) {
+                        const shadow = Math.random() > 0.5 ? this.shadow1 : this.shadow2;
+                        shadow.style.opacity = '0.8';
+                        setTimeout(() => {
+                            shadow.style.opacity = '0';
+                        }, 3000);
+                    }
+                }, 15000);
+
+                // Screen melt effect
+                setInterval(() => {
+                    if (this.horrorLevel > 0.7 && Math.random() < 0.1) {
+                        this.screenMelt.style.opacity = '0.7';
+                        setTimeout(() => {
+                            this.screenMelt.style.opacity = '0';
+                        }, 3000);
+                    }
+                }, 20000);
+            }
+
+            initInteractionTraps() {
+                // Random page freezes
+                setInterval(() => {
+                    if (this.horrorLevel > 0.7 && Math.random() < 0.1) {
+                        document.body.style.pointerEvents = 'none';
+                        setTimeout(() => {
+                            document.body.style.pointerEvents = 'all';
+                        }, 1000);
+                    }
+                }, 30000);
+
+                // Fake notifications
+                setInterval(() => {
+                    if (this.horrorLevel > 0.5 && Math.random() < 0.2) {
+                        this.showFakeNotification();
+                    }
+                }, 45000);
+
+                // Don't click button
+                setInterval(() => {
+                    if (this.horrorLevel > 0.5 && Math.random() < 0.1) {
+                        this.dontClickBtn.style.display = 'block';
+                        setTimeout(() => {
+                            this.dontClickBtn.style.display = 'none';
+                        }, 5000);
+                    }
+                }, 30000);
+
+                // Bloody cursor
+                setInterval(() => {
+                    if(this.horrorLevel > 0.7 && Math.random() < 0.2) {
+                        document.body.style.cursor = 'none';
+                        this.bloodCursor.style.display = 'block';
+                        
+                        // Make cursor follow mouse
+                        document.addEventListener('mousemove', this.trackBloodCursor);
+                        
+                        setTimeout(() => {
+                            document.body.style.cursor = '';
+                            this.bloodCursor.style.display = 'none';
+                            document.removeEventListener('mousemove', this.trackBloodCursor);
+                        }, 5000);
+                    }
+                }, 30000);
+            }
+
+            trackBloodCursor = (e) => {
+                this.bloodCursor.style.left = `${e.clientX - 16}px`;
+                this.bloodCursor.style.top = `${e.clientY - 16}px`;
+            }
+
+            initBiometricReaction() {
+                // Mouse movement tracking
+                let lastMoveTime = Date.now();
+                document.addEventListener('mousemove', () => {
+                    lastMoveTime = Date.now();
+                    this.adjustHorrorLevel(0.1); // Increase tension when user is active
+                });
+
+                // Inactivity detection
+                setInterval(() => {
+                    const inactiveTime = Date.now() - lastMoveTime;
+                    if (inactiveTime > 30000 && this.horrorLevel > 0.3) {
+                        this.adjustHorrorLevel(0.05); // Slowly increase tension when inactive
+                    }
+                }, 5000);
+
+                // Device orientation (for mobile)
+                if (window.DeviceOrientationEvent) {
+                    window.addEventListener('deviceorientation', (e) => {
+                        if(e.gamma > 45 || e.gamma < -45) {
+                            this.triggerTiltScare();
+                        }
+                    });
+                }
+
+                // Shake detection
+                if (window.DeviceMotionEvent) {
+                    let lastShake = 0;
+                    window.addEventListener('devicemotion', (e) => {
+                        if(e.acceleration.x > 15 && Date.now() - lastShake > 10000) {
+                            lastShake = Date.now();
+                            this.triggerShakeScare();
+                        }
+                    });
+                }
+            }
+
+            initParanoiaMode() {
+                // Word replacement system
+                const replaceableWords = [
+                    { original: "the", replacements: ["them", "they", "it"] },
+                    { original: "you", replacements: ["us", "them", "it"] },
+                    { original: "home", replacements: ["here", "there", "the void"] },
+                    { original: "see", replacements: ["watch", "observe", "know"] },
+                    { original: "alone", replacements: ["followed", "watched", "not alone"] }
+                ];
+
+                setInterval(() => {
+                    if (this.paranoiaMode && this.horrorLevel > 0.7) {
+                        replaceableWords.forEach(word => {
+                            if (Math.random() < 0.3) {
+                                const elements = document.querySelectorAll('p, h1, h2, h3, span, a');
+                                elements.forEach(el => {
+                                    if (el.textContent.includes(word.original)) {
+                                        const replacement = word.replacements[
+                                            Math.floor(Math.random() * word.replacements.length)
+                                        ];
+                                        el.innerHTML = el.innerHTML.replace(
+                                            new RegExp(word.original, 'gi'), 
+                                            `<span class="paranoia-text">${replacement}</span>`
+                                        );
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }, 10000);
+            }
+
+            initPersonalizedHorror() {
+                // Use the user's name if available
+                if (this.userName) {
+                    const nameMessages = [
+                        `${this.userName}, they're coming`,
+                        `${this.userName}, look behind you`,
+                        `${this.userName}, we see you`,
+                        `${this.userName}, don't trust them`,
+                        `${this.userName}, it knows your name`
+                    ];
+                    this.whispers = this.whispers.concat(nameMessages);
+                    
+                    // Add name to hidden messages
+                    const nameMessage = document.createElement('div');
+                    nameMessage.className = 'hidden-message';
+                    nameMessage.textContent = `${this.userName}, run`;
+                    nameMessage.style.top = '50%';
+                    nameMessage.style.left = '50%';
+                    nameMessage.style.transform = 'translate(-50%, -50%)';
+                    document.body.appendChild(nameMessage);
+                    this.hiddenMessages.push(nameMessage);
+                }
+                
+                // Night mode effects
+                if (this.nightMode) {
+                    this.adjustHorrorLevel(0.3);
+                    document.body.classList.add('glitch');
+                }
+                
+                // Returning visitor effects
+                if (this.visitedBefore) {
+                    const welcomeBack = document.createElement('div');
+                    welcomeBack.className = 'hidden-message';
+                    welcomeBack.textContent = 'WELCOME BACK';
+                    welcomeBack.style.top = '10%';
+                    welcomeBack.style.left = '50%';
+                    welcomeBack.style.transform = 'translateX(-50%)';
+                    welcomeBack.style.fontSize = '2rem';
+                    document.body.appendChild(welcomeBack);
+                    setTimeout(() => {
+                        welcomeBack.style.opacity = '1';
+                        setTimeout(() => {
+                            welcomeBack.style.opacity = '0';
+                        }, 3000);
+                    }, 2000);
+                }
+            }
+
+            initEasterEggs() {
+                // Konami code
+                const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+                let konamiIndex = 0;
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === konamiCode[konamiIndex]) {
+                        konamiIndex++;
+                        if (konamiIndex === konamiCode.length) {
+                            this.triggerUltimateScare();
+                            konamiIndex = 0;
+                        }
+                    } else {
+                        konamiIndex = 0;
+                    }
+                });
+
+                // 3:33 AM effect
+                setInterval(() => {
+                    const now = new Date();
+                    if (now.getHours() === 3 && now.getMinutes() === 33 && this.horrorLevel > 0) {
+                        this.trigger333Effect();
+                    }
+                }, 60000);
+            }
+
+            handleDontClick() {
+                this.scareCount++;
+                if (this.scareCount === 1) {
+                    this.dontClickBtn.textContent = "I WARNED YOU";
+                    this.showHiddenMessage();
+                } else if (this.scareCount === 2) {
+                    this.dontClickBtn.textContent = "LAST CHANCE";
+                    this.playScream();
+                } else if (this.scareCount >= 3) {
+                    this.triggerUltimateScare();
+                    this.dontClickBtn.style.display = 'none';
+                }
+            }
+
+            toggleTerrorMode() {
+                this.horrorLevel = this.horrorLevel > 0 ? 0 : 0.7;
+                if (this.horrorLevel > 0) {
+                    this.scareToggle.textContent = 'DISABLE NIGHTMARE MODE';
+                    document.body.classList.add('glitch');
+                    this.showWhisper();
+                    setTimeout(() => {
+                        this.triggerRandomEffect();
+                    }, 10000);
+                } else {
+                    this.scareToggle.textContent = 'ENABLE NIGHTMARE MODE';
+                    document.body.classList.remove('glitch');
+                    this.hideWhisper();
+                }
+            }
+
+            triggerScare() {
+                if (Date.now() - this.lastScareTime < this.scareCooldown) return;
+                this.lastScareTime = Date.now();
+                
+                const scareTypes = [
+                    'image',
+                    'audio',
+                    'message',
+                    'blood',
+                    'freeze',
+                    'melt'
+                ];
+                const selectedScare = scareTypes[Math.floor(Math.random() * scareTypes.length)];
+                
+                switch(selectedScare) {
+                    case 'image':
+                        this.showScareImage();
+                        break;
+                    case 'audio':
+                        this.playScream();
+                        break;
+                    case 'message':
+                        this.showHiddenMessage();
+                        break;
+                    case 'blood':
+                        this.showBloodEffect();
+                        break;
+                    case 'freeze':
+                        this.freezeScreen();
+                        break;
+                    case 'melt':
+                        this.screenMelt.style.opacity = '0.7';
+                        setTimeout(() => {
+                            this.screenMelt.style.opacity = '0';
+                        }, 3000);
+                        break;
+                }
+                
+                this.adjustHorrorLevel(0.1);
+            }
+
+            showScareImage() {
+                const scareImages = [
+                    'https://i.imgur.com/7Z7Z7Z7.jpg',
+                    'https://i.imgur.com/9X9X9X9.jpg',
+                    'https://i.imgur.com/8Y8Y8Y8.jpg'
+                ];
+                const randomScare = Math.floor(Math.random() * scareImages.length);
+                this.scareImage.src = scareImages[randomScare];
+                this.scareContainer.style.opacity = '1';
+                this.scareContainer.style.pointerEvents = 'all';
+                
+                setTimeout(() => {
+                    this.scareContainer.style.opacity = '0';
+                    this.scareContainer.style.pointerEvents = 'none';
+                }, 3000);
+            }
+
+            playScream() {
+                if (!this.audioEnabled) return;
+                
+                const scareSounds = [
+                    'https://www.myinstants.com/media/sounds/scream.mp3',
+                    'https://www.myinstants.com/media/sounds/scary-scream.mp3',
+                    'https://www.myinstants.com/media/sounds/whisper.mp3'
+                ];
+                const randomSound = Math.floor(Math.random() * scareSounds.length);
+                
+                try {
+                    const audio = new Audio(scareSounds[randomSound]);
+                    audio.volume = 0.7;
+                    audio.play().catch(e => console.log("Audio play failed:", e));
+                } catch (e) {
+                    console.log("Audio error:", e);
+                }
+            }
+
+            showHiddenMessage() {
+                const randomMessage = Math.floor(Math.random() * this.hiddenMessages.length);
+                this.hiddenMessages[randomMessage].style.opacity = '1';
+                setTimeout(() => {
+                    this.hiddenMessages[randomMessage].style.opacity = '0';
+                }, 3000);
+            }
+
+            showBloodEffect() {
+                this.bloodEffect.style.opacity = '0.7';
+                setTimeout(() => {
+                    this.bloodEffect.style.opacity = '0';
+                }, 2000);
+            }
+
+            freezeScreen() {
+                document.body.style.pointerEvents = 'none';
+                setTimeout(() => {
+                    document.body.style.pointerEvents = 'all';
+                }, 1000);
+            }
+
+            showWhisper() {
+                const randomWhisper = Math.floor(Math.random() * this.whispers.length);
+                this.whisperText.textContent = this.whispers[randomWhisper];
+                this.whisperText.style.opacity = '1';
+                
+                setTimeout(() => {
+                    this.whisperText.style.opacity = '0';
+                }, 5000);
+            }
+
+            hideWhisper() {
+                this.whisperText.style.opacity = '0';
+            }
+
+            hideScare() {
+                this.scareContainer.style.opacity = '0';
+                this.scareContainer.style.pointerEvents = 'none';
+            }
+
+            showFakeNotification() {
+                const notifications = [
+                    { title: "Security Alert", message: "Unauthorized access detected. System compromised." },
+                    { title: "Warning", message: "Your webcam has been activated." },
+                    { title: "Alert", message: "Unknown entity detected in your vicinity." },
+                    { title: "Error", message: "Memory corruption detected. System failure imminent." },
+                    { title: "Notice", message: `${this.userName || 'User'}, we can see you` }
+                ];
+                const randomNotif = Math.floor(Math.random() * notifications.length);
+                
+                this.fakeNotification.querySelector('h4').textContent = notifications[randomNotif].title;
+                this.fakeNotification.querySelector('p').textContent = notifications[randomNotif].message;
+                this.fakeNotification.classList.add('show');
+                
+                setTimeout(() => {
+                    this.fakeNotification.classList.remove('show');
+                }, 5000);
+            }
+
+            triggerRandomEffect() {
+                const effects = [
+                    this.triggerFlicker,
+                    this.showRandomMessage,
+                    this.triggerBloodEffect,
+                    this.triggerCursorEffect,
+                    this.showFakeNotification,
+                    this.showShadowFigure,
+                    this.showHiddenFace,
+                    this.triggerScreenMelt
+                ];
+                
+                const randomEffect = Math.floor(Math.random() * effects.length);
+                effects[randomEffect].call(this);
+            }
+
+            triggerFlicker() {
+                document.body.classList.add('flicker');
+                setTimeout(() => {
+                    document.body.classList.remove('flicker');
+                }, 5000);
+            }
+
+            triggerCursorEffect() {
+                const cursor = document.createElement('div');
+                cursor.className = 'cursor';
+                cursor.style.position = 'fixed';
+                cursor.style.left = `${Math.random() * window.innerWidth}px`;
+                cursor.style.top = `${Math.random() * window.innerHeight}px`;
+                cursor.style.zIndex = '10000';
+                document.body.appendChild(cursor);
+                
+                setTimeout(() => {
+                    cursor.remove();
+                }, 2000);
+            }
+
+            triggerScreenMelt() {
+                this.screenMelt.style.opacity = '0.7';
+                setTimeout(() => {
+                    this.screenMelt.style.opacity = '0';
+                }, 3000);
+            }
+
+            showShadowFigure() {
+                const shadow = Math.random() > 0.5 ? this.shadow1 : this.shadow2;
+                shadow.style.opacity = '0.8';
+                setTimeout(() => {
+                    shadow.style.opacity = '0';
+                }, 3000);
+            }
+
+            showHiddenFace() {
+                const face = Math.random() > 0.5 ? this.peripheralFace1 : this.peripheralFace2;
+                face.style.opacity = '0.7';
+                setTimeout(() => {
+                    face.style.opacity = '0';
+                }, 1000);
+            }
+
+            triggerTiltScare() {
+                if (this.horrorLevel > 0.5) {
+                    this.showScareImage();
+                    this.showBloodEffect();
+                }
+            }
+
+            triggerShakeScare() {
+                if (this.horrorLevel > 0.5) {
+                    this.playScream();
+                    this.showHiddenMessage();
+                }
+            }
+
+            specialEntityScare() {
+                if (this.horrorLevel > 0) {
+                    this.scareImage.src = 'https://i.imgur.com/6X6X6X6.jpg';
+                    this.scareContainer.style.opacity = '1';
+                    this.scareContainer.style.pointerEvents = 'all';
+                    
+                    this.whisperText.textContent = "You shouldn't have looked";
+                    this.whisperText.style.opacity = '1';
+                    setTimeout(() => {
+                        this.whisperText.style.opacity = '0';
+                    }, 5000);
+                } else {
+                    alert("Entity profile loading... (Enable Nightmare Mode for enhanced experience)");
+                }
+            }
+
+            trigger333Effect() {
+                // Special 3:33 AM effect
+                document.body.style.backgroundColor = '#000';
+                this.bloodEffect.style.opacity = '0.9';
+                this.staticOverlay.style.opacity = '0.5';
+                
+                const allText = document.querySelectorAll('*');
+                allText.forEach(el => {
+                    el.style.color = '#c1121f';
+                    el.style.textShadow = '0 0 10px #c1121f';
+                });
+                
+                this.playScream();
+                this.showHiddenMessage();
+                
+                setTimeout(() => {
+                    document.body.style.backgroundColor = '';
+                    this.bloodEffect.style.opacity = '0';
+                    this.staticOverlay.style.opacity = '0.1';
+                    allText.forEach(el => {
+                        el.style.color = '';
+                        el.style.textShadow = '';
+                    });
+                }, 3330);
+            }
+
+            triggerUltimateScare() {
+                // Maximum horror experience
+                this.horrorLevel = 1;
+                this.scareToggle.textContent = 'NIGHTMARE MODE LOCKED';
+                
+                // Multiple effects at once
+                this.showScareImage();
+                this.playScream();
+                this.showBloodEffect();
+                this.showHiddenMessage();
+                this.triggerFlicker();
+                this.showFakeNotification();
+                this.triggerScreenMelt();
+                
+                // Continuous effects
+                this.paranoiaMode = true;
+                document.body.classList.add('glitch');
+                
+                // Change background
+                document.body.style.background = 'black';
+                
+                // Final whisper
+                setTimeout(() => {
+                    this.whisperText.textContent = "TOO LATE";
+                    this.whisperText.style.opacity = '1';
+                    this.whisperText.style.color = 'red';
+                    this.whisperText.style.fontSize = '2rem';
+                }, 3000);
+                
+                // Redirect after 10 seconds
+                setTimeout(() => {
+                    window.location.href = 'https://i.imgur.com/7Z7Z7Z7.jpg';
+                }, 10000);
+            }
+
+            adjustHorrorLevel(amount) {
+                this.horrorLevel = Math.min(1, Math.max(0, this.horrorLevel + amount));
+                
+                // Adjust effects based on horror level
+                if (this.horrorLevel > 0.7) {
+                    this.paranoiaMode = true;
+                    document.body.classList.add('glitch');
+                } else {
+                    this.paranoiaMode = false;
+                    document.body.classList.remove('glitch');
+                }
+                
+                // Adjust background noise
+                if (this.audioEnabled) {
+                    this.backgroundNoise.volume = this.horrorLevel * 0.1;
+                }
+            }
+        }
+
+        // Initialize the horror engine when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const horrorEngine = new HorrorEngine();
+            
+            // Footer message effect
+            setInterval(() => {
+                const footerMessage = document.getElementById('footerMessage');
+                footerMessage.style.opacity = footerMessage.style.opacity === '1' ? '0.3' : '1';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
