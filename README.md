@@ -1,26 +1,7 @@
-# DO NOT ENTER - Horror Website
+# do-not-enter-sis-horror
 
-A darkly humorous horror-themed website with interactive scares, glitch effects, and paranoia-inducing features.
-
-## Features
-- Interactive "nightmare mode" toggle
-- Jumpscare effects and audio
-- Glitch animations and visual distortions
-- Peripheral vision creepy faces
-- Fake system notifications
-- Personalized horror (uses visitor's name)
-
-## Status
-Work in Progress - Not yet completed
-
-## Technologies
-- HTML5
-- CSS3 (animations, effects)
-- Vanilla JavaScript
-- Web Audio API
-
-## How to Use
-Simply open `index.html` in your browser and enable "Nightmare Mode" for the full experience.
+Horror-themed interactive website (HTML/CSS/JS). 'DO NOT ENTER' — a darkly humorous scp-style classified archives page with nightmare mode toggle, jumpscares, glitch animations, peripheral vision faces, fake notifications, EVP audio whispers, and a bloody cursor. Vanilla JS horror engine.
 
 ---
-**Made for fun by Me**
+
+*Archived from backup on 2025-06-05. This repo did not exist on GitHub at time of archival.*
