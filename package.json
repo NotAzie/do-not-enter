@@ -1,0 +1,34 @@
+{
+  "name": "do-not-enter",
+  "version": "1.0.0",
+  "description": "An interactive horror-themed experience with an advanced JavaScript horror engine, SCP-style classified archives, and multiple psychological terror systems.",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 8080",
+    "test": "echo 'Horror effects cannot be automated tested - manual testing required'"
+  },
+  "keywords": [
+    "horror",
+    "scp",
+    "classified",
+    "interactive",
+    "experience",
+    "terror",
+    "psychological",
+    "javascript",
+    "experiments"
+  ],
+  "author": "Mazziula",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NotAzie/do-not-enter/issues"
+  },
+  "homepage": "https://github.com/NotAzie/do-not-enter#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NotAzie/do-not-enter.git"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

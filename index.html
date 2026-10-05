@@ -3,7 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DO NOT ENTER</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>DO NOT ENTER - Horror Experience</title>
+    <meta name="description" content="An interactive horror experience with SCP-style classified archives and adaptive psychological terror. Proceed at your own risk.">
+    <meta name="author" content="Mazziula">
+    <meta name="keywords" content="horror, scp, classified, interactive, experience, psychological, javascript, terror, entities">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://notazie.github.io/do-not-enter/">
+    <meta property="og:title" content="DO NOT ENTER - Horror Experience">
+    <meta property="og:description" content="YOU SHOULDN'T BE HERE. This website contains classified information about entities that should not exist. Proceed at your own risk.">
+    <meta property="og:image" content="assets/screenshots/banner.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://notazie.github.io/do-not-enter/">
+    <meta property="twitter:title" content="DO NOT ENTER - Horror Experience">
+    <meta property="twitter:description" content="An interactive horror experience with SCP-style classified archives and adaptive psychological terror.">
+    <meta property="twitter:image" content="assets/screenshots/banner.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='50%25' x='50%25' text-anchor='middle' dominant-baseline='middle' font-size='80' fill='%23c1121f'>🚫</text></svg>">
+    
+    <!-- Theme color -->
+    <meta name="theme-color" content="#0a0a0a">
+    
     <style>
         /* Base Styles */
         :root {
@@ -753,7 +779,35 @@
         <p id="footerMessage">YOU ARE NOT ALONE.</p>
     </footer>
 
+    <!-- Accessibility: Pause/Hide button for effects -->
+    <div class="accessibility-controls" style="position: fixed; top: 70px; right: 10px; z-index: 10001; display: flex; gap: 5px;">
+        <button id="pauseEffects" style="background: #222; color: #e0e0e0; border: 1px solid #c1121f; padding: 5px 10px; cursor: pointer; font-size: 12px; border-radius: 3px;">⏸️ Pause Effects</button>
+        <button id="resetHorror" style="background: #222; color: #e0e0e0; border: 1px solid #c1121f; padding: 5px 10px; cursor: pointer; font-size: 12px; border-radius: 3px;">🔄 Reset</button>
+    </div>
+    
+    <!-- Content Warning Banner -->
+    <div id="contentWarning" style="position: fixed; top: 0; left: 0; right: 0; background: #0a0a0a; color: #e0e0e0; padding: 15px; text-align: center; z-index: 99999; border-bottom: 3px solid #c1121f; display: block;">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <strong style="color: #c1121f;">⚠️ CONTENT WARNING</strong>
+                <p style="font-size: 0.9rem; margin: 5px 0 0 0;">This experience contains horror elements including jump scares, disturbing imagery, and audio effects. <a href="#" id="dismissWarning" style="color: #c1121f; text-decoration: underline;">I understand, enter anyway</a></p>
+            </div>
+        </div>
+    </div>
+    
     <script>
+        // Content warning dismiss functionality
+        document.getElementById('dismissWarning').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('contentWarning').style.display = 'none';
+            localStorage.setItem('warningDismissed', 'true');
+        });
+        
+        // Check if warning was previously dismissed
+        if (localStorage.getItem('warningDismissed') === 'true') {
+            document.getElementById('contentWarning').style.display = 'none';
+        }
+        
         // Ultimate Horror Engine 2.0
         class HorrorEngine {
             constructor() {
